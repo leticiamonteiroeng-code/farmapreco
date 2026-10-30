@@ -11,9 +11,12 @@
   --verde: #087b61;
   --fundo: #f5f8f6;
   --texto: #18352c;
+  --borda: #dce8e2;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -25,53 +28,66 @@ body {
 header {
   background: var(--verde);
   color: white;
-  padding: 22px;
+  padding: 18px;
 }
 
-header strong { font-size: 25px; }
+header strong {
+  font-size: 23px;
+}
 
 header p {
-  margin: 6px 0 0;
-  font-size: 13px;
+  margin: 5px 0 0;
+  font-size: 12px;
 }
 
 main {
   max-width: 1100px;
   margin: auto;
-  padding: 25px 16px;
+  padding: 20px 14px;
 }
 
-h1 { font-size: 30px; }
-h2 { font-size: 21px; }
+h1 {
+  font-size: 25px;
+  margin-bottom: 8px;
+}
 
-p { line-height: 1.5; }
+h2 {
+  font-size: 18px;
+  margin-top: 0;
+}
 
-.panel, .card {
+p {
+  line-height: 1.45;
+}
+
+.panel {
   background: white;
-  border: 1px solid #dce8e2;
-  border-radius: 15px;
-  padding: 18px;
-  margin-bottom: 15px;
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
 }
 
 .notice {
   background: #fff8df;
   border: 1px solid #ebd594;
-  border-radius: 12px;
-  padding: 14px;
-  font-size: 14px;
-  margin-bottom: 18px;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 12px;
+  margin-bottom: 15px;
 }
 
 input, select, button {
   width: 100%;
-  padding: 13px;
+  padding: 10px;
   border: 1px solid #cddbd4;
-  border-radius: 10px;
+  border-radius: 8px;
   font: inherit;
 }
 
-input, select { background: white; }
+input, select {
+  background: white;
+}
 
 button {
   background: var(--verde);
@@ -81,90 +97,143 @@ button {
   cursor: pointer;
 }
 
-button:hover { background: #08664f; }
+button:hover {
+  background: #08664f;
+}
 
 .search {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 label {
   display: block;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
 }
 
 label input, label select {
-  margin-top: 8px;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 18px;
-  margin-top: 20px;
-}
-
-.card h3 { margin-bottom: 6px; }
-
-.price {
-  color: var(--verde);
-  font-size: 24px;
-  font-weight: bold;
+  margin-top: 6px;
+  font-size: 13px;
 }
 
 .muted {
   color: #61746b;
-  font-size: 13px;
+  font-size: 12px;
 }
 
-.pill {
-  display: inline-block;
-  background: #e6f5ee;
-  color: #076c4d;
-  padding: 6px 9px;
-  border-radius: 30px;
+.store-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.store {
+  background: #edf7f2;
+  border: 1px solid #c8e3d5;
+  border-radius: 7px;
+  padding: 9px 5px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.store-grid button {
+  min-height: 36px;
+  padding: 8px 5px;
   font-size: 12px;
+  font-weight: 600;
+  border-radius: 7px;
+  line-height: 1.2;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 12px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 9px 7px;
+  border-bottom: 1px solid #e2e9e5;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.comparison-table th {
+  background: #e9f3ed;
+  font-size: 12px;
+}
+
+.comparison-table td:last-child,
+.comparison-table th:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.comparison-table tbody tr:first-child {
+  background: #edf8ef;
+}
+
+.table-price {
+  color: var(--verde);
+  font-weight: bold;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 250px;
+  gap: 15px;
+  margin-top: 18px;
 }
 
 .item {
   border-bottom: 1px solid #e5eee9;
-  padding: 10px 0;
+  padding: 9px 0;
+  font-size: 12px;
 }
 
 .smallbtn {
   background: #edf4ef;
   color: #184b38;
   margin-top: 6px;
-}
-
-.store-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.store {
-  background: #edf7f2;
-  border: 1px solid #c8e3d5;
-  border-radius: 10px;
-  padding: 12px 8px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: bold;
+  font-size: 11px;
 }
 
 footer {
-  margin-top: 30px;
+  margin-top: 25px;
   color: #61746b;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 @media(max-width: 760px) {
-  .search, .layout, .store-grid {
+  .search,
+  .layout {
     grid-template-columns: 1fr;
+  }
+
+  .store-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .store-grid button {
+    min-height: 34px;
+    padding: 7px 4px;
+    font-size: 11px;
+  }
+
+  .comparison-table {
+    font-size: 11px;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 8px 5px;
   }
 }
 </style>
@@ -231,7 +300,7 @@ e organize sua compra no Distrito Federal.
 
   </div>
 
-  <button id="searchButton" style="margin-top:15px">
+  <button id="searchButton" style="margin-top:12px">
     Comparar preços
   </button>
 
@@ -333,8 +402,8 @@ e organize sua compra no Distrito Federal.
 
 <script>
 
-// Catálogo de exemplo.
-// Futuramente será substituído por uma base de medicamentos.
+// Catálogo demonstrativo.
+// Não representa preços ou estoques reais.
 
 const catalog = [
   {
@@ -410,20 +479,19 @@ try {
   basket = JSON.parse(
     localStorage.getItem("farmapreco_basket") || "[]"
   );
+
   if (!Array.isArray(basket)) basket = [];
 } catch {
   basket = [];
 }
 
 function render() {
-
   const query = normalize($("query").value);
   const region = $("region").value;
   const sort = $("sort").value;
 
-  let rows = catalog.flatMap(product => {
-
-    return product.offers
+  let rows = catalog.flatMap(product =>
+    product.offers
       .filter(offer => !region || offer[1] === region)
       .map(offer => ({
         id: product.id,
@@ -434,16 +502,13 @@ function render() {
         store: offer[0],
         region: offer[1],
         price: offer[2]
-      }));
-
-  });
+      }))
+  );
 
   if (query) {
-
     const words = query.split(/\s+/);
 
     rows = rows.filter(product => {
-
       const searchable = normalize([
         product.drug,
         product.dose,
@@ -454,9 +519,7 @@ function render() {
       return words.every(word =>
         searchable.includes(word)
       );
-
     });
-
   }
 
   rows.sort(
@@ -466,64 +529,60 @@ function render() {
   );
 
   $("count").textContent =
-    rows.length + " ofertas fictícias encontradas";
+    rows.length + " ofertas demonstrativas encontradas";
 
-  $("results").replaceChildren();
+  const results = $("results");
+  results.replaceChildren();
 
   if (!rows.length) {
-    const empty = document.createElement("div");
-    empty.className = "card";
+    const empty = document.createElement("p");
+    empty.className = "muted";
     empty.textContent =
-      "Nenhum medicamento encontrado no catálogo demonstrativo.";
-    $("results").appendChild(empty);
+      "Medicamento não encontrado na base demonstrativa. " +
+      "A pesquisa geral dependerá da integração do catálogo.";
+    results.appendChild(empty);
     return;
   }
 
-  rows.forEach(product => {
+  const table = document.createElement("table");
+  table.className = "comparison-table";
 
-    const card = document.createElement("article");
-    card.className = "card";
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
 
-    const badge = document.createElement("span");
-    badge.className = "pill";
-    badge.textContent = "Demonstração • preço fictício";
-
-    const name = document.createElement("h3");
-    name.textContent =
-      product.drug + " " + product.dose;
-
-    const pack = document.createElement("p");
-    pack.textContent = product.pack;
-
-    const store = document.createElement("p");
-    store.className = "muted";
-    store.textContent =
-      product.store + " • " + product.region;
-
-    const price = document.createElement("div");
-    price.className = "price";
-    price.textContent = money(product.price);
-
-    const add = document.createElement("button");
-    add.style.marginTop = "12px";
-    add.textContent = "Adicionar à lista";
-
-    add.addEventListener("click", () => {
-      basket.push({
-        id: product.id,
-        drug: product.drug,
-        dose: product.dose,
-        store: product.store,
-        price: product.price
-      });
-      saveBasket();
-    });
-
-    card.append(badge, name, pack, store, price, add);
-    $("results").appendChild(card);
-
+  ["Farmácia", "Medicamento", "Valor"].forEach(label => {
+    const th = document.createElement("th");
+    th.textContent = label;
+    headerRow.appendChild(th);
   });
 
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
+  rows.forEach(product => {
+    const tr = document.createElement("tr");
+
+    const store = document.createElement("td");
+    store.textContent = product.store;
+
+    const medicine = document.createElement("td");
+    medicine.textContent =
+      product.drug + " " +
+      product.dose + " — " +
+      product.pack;
+
+    const price = document.createElement("td");
+    price.className = "table-price";
+    price.textContent = money(product.price);
+
+    tr.append(store, medicine, price);
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  results.appendChild(table);
 }
 
 function saveBasket() {
@@ -535,7 +594,6 @@ function saveBasket() {
 }
 
 function drawBasket() {
-
   $("basket").replaceChildren();
 
   if (!basket.length) {
@@ -546,7 +604,6 @@ function drawBasket() {
   }
 
   basket.forEach((item, index) => {
-
     const row = document.createElement("div");
     row.className = "item";
 
@@ -569,7 +626,6 @@ function drawBasket() {
 
     row.append(description, price, remove);
     $("basket").appendChild(row);
-
   });
 
   const total = basket.reduce(
@@ -578,7 +634,6 @@ function drawBasket() {
 
   $("total").textContent =
     "Total demonstrativo: " + money(total);
-
 }
 
 const storeUrls = {
@@ -590,7 +645,6 @@ const storeUrls = {
 };
 
 function openStore(store) {
-
   const query = $("query").value.trim();
 
   if (!query) {
@@ -606,11 +660,9 @@ function openStore(store) {
     "Abrindo a farmácia. Pesquise por: " + query;
 
   window.open(url, "_blank", "noopener,noreferrer");
-
 }
 
 $("searchButton").onclick = render;
-
 $("query").addEventListener("input", render);
 $("region").addEventListener("change", render);
 $("sort").addEventListener("change", render);
