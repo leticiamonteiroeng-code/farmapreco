@@ -1,6 +1,468 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FarmaPreço DF</title><style>
-:root{--green:#087b61;--ink:#18352c}*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:var(--ink);font:13px Arial,sans-serif}header{background:var(--green);color:white;padding:17px max(16px,calc((100% - 1050px)/2))}header b{font-size:22px}header p{margin:5px 0}main{max-width:1080px;margin:auto;padding:18px 14px}h1{font-size:23px}h2{font-size:17px;margin:0 0 12px}.panel{background:white;border:1px solid #dce8e2;border-radius:12px;padding:15px;margin:12px 0}.muted{color:#62746b;font-size:12px}.notice{background:#fff7db;border:1px solid #eadca9;padding:12px;border-radius:8px}.search{display:grid;grid-template-columns:2fr 1fr;gap:10px}label{font-weight:bold;font-size:12px}input,select{width:100%;margin-top:6px;padding:10px;border:1px solid #cbdcd3;border-radius:7px;font-size:13px}button{background:var(--green);color:white;border:0;border-radius:7px;padding:9px 11px;font-size:12px;cursor:pointer}.stores{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.stores button{min-height:35px;padding:7px 4px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px}th,td{padding:9px 7px;border-bottom:1px solid #e4ebe6;text-align:left}th{background:#e9f3ed}td:last-child,th:last-child{text-align:right;white-space:nowrap}tr:first-child td{background:#f0f8f2}.med-result{width:100%;background:#fff;color:var(--ink);text-align:left;border-bottom:1px solid #e4ebe6;border-radius:0;padding:9px}.med-result:hover{background:#edf7f2}.med-result small{display:block;color:#687b70;margin-top:3px}.selected{font-weight:bold;color:var(--green)}.hidden{display:none}footer{font-size:11px;color:#667;margin:20px 0}@media(max-width:650px){.search{grid-template-columns:1fr}.stores{grid-template-columns:repeat(3,minmax(0,1fr))}.stores button{font-size:11px}table{font-size:11px}th,td{padding:8px 5px}}
-</style></head><body><header><b>✚ FarmaPreço DF</b><p>Pesquise medicamentos e consulte farmácias que atendem o DF</p></header><main><h1>Encontre seu medicamento</h1><p class="notice"><b>Catálogo nacional da Anvisa:</b> pesquisa por nome comercial ou princípio ativo em registros ativos. Ainda não há integração de preços reais; não exibimos valores fictícios.</p><section class="panel"><h2>Pesquisar medicamento</h2><div class="search"><label>Nome, marca ou princípio ativo<input id="query" type="search" placeholder="Ex.: Novalgina, dipirona, Tylenol" autocomplete="off"></label><label>Região de atendimento<select id="region"><option>Todo o Distrito Federal</option><option>Plano Piloto</option><option>Águas Claras</option><option>Taguatinga</option><option>Ceilândia</option><option>Guará</option><option>Samambaia</option><option>Outras regiões do DF</option></select></label></div><p id="status" class="muted">Carregando catálogo...</p><div id="matches"></div></section><section class="panel"><h2>Medicamento selecionado</h2><p id="selected" class="selected">Selecione um medicamento na pesquisa acima.</p><p id="ingredient" class="muted"></p><h2>Comparação de preços</h2><div class="tablewrap"><table><thead><tr><th>Farmácia</th><th>Medicamento</th><th>Valor</th></tr></thead><tbody id="prices"></tbody></table></div><p class="muted">— significa preço não consultado. O cadastro da Anvisa não informa dosagem, embalagem, estoque ou preço de venda. Confirme a apresentação na farmácia.</p></section><section class="panel"><h2>Consultar diretamente nas farmácias</h2><div class="stores" id="stores"></div><p id="storeMessage" class="muted">Selecione um medicamento antes de abrir uma farmácia.</p></section><footer>Fonte do catálogo: arquivo DADOS_ABERTOS_MEDICAMENTOS.csv fornecido pelo usuário. Somente registros marcados como ativos no arquivo. Consulta informativa; não substitui orientação médica ou farmacêutica.</footer></main><script>
-const stores=[['Drogasil','https://www.drogasil.com.br/'],['Droga Raia','https://www.drogaraia.com.br/'],['Pague Menos','https://www.paguemenos.com.br/'],['Rosário','https://www.drogariarosario.com.br/'],['Pacheco','https://www.drogariaspacheco.com.br/']];const $=id=>document.getElementById(id);const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();let catalog=[],selected=null;const list=$('stores');stores.forEach(([name,url])=>{const b=document.createElement('button');b.textContent=name;b.onclick=()=>{if(!selected){$('storeMessage').textContent='Selecione primeiro um medicamento.';return}navigator.clipboard?.writeText(selected[0]).catch(()=>{});$('storeMessage').textContent='Abrindo '+name+'. Pesquise pelo nome: '+selected[0];window.open(url,'_blank','noopener,noreferrer')};list.appendChild(b)});
-function showPrices(){const body=$('prices');body.replaceChildren();stores.forEach(([name])=>{const tr=document.createElement('tr');[name,selected?selected[0]:'Selecione um medicamento','—'].forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});body.appendChild(tr)})}function choose(row){selected=row;$('selected').textContent=row[0];$('ingredient').textContent='Princípio ativo: '+(row[1]||'não informado');$('matches').replaceChildren();$('status').textContent='Medicamento selecionado. Confira a apresentação no site da farmácia.';showPrices()}function search(){const q=norm($('query').value);const matches=$('matches');matches.replaceChildren();if(q.length<2){$('status').textContent='Digite pelo menos 2 caracteres para pesquisar.';return}const terms=q.split(/\s+/).filter(Boolean);let count=0;for(const row of catalog){const text=norm(row[0]+' '+row[1]);if(terms.every(t=>text.includes(t))){count++;if(count<=35){const b=document.createElement('button');b.className='med-result';const name=document.createElement('span');name.textContent=row[0];const ingredient=document.createElement('small');ingredient.textContent=row[1]||'Princípio ativo não informado';b.append(name,ingredient);b.onclick=()=>choose(row);matches.appendChild(b)}}}$('status').textContent=count?count+' correspondências. Exibindo até 35; refine a busca para encontrar o medicamento exato.':'Nenhum registro ativo encontrado nesta base.'}let pending;$('query').addEventListener('input',()=>{clearTimeout(pending);pending=setTimeout(search,160)});showPrices();fetch('./medicamentos.json').then(r=>{if(!r.ok)throw Error('Arquivo indisponível');return r.json()}).then(data=>{catalog=data;$('status').textContent='Catálogo carregado: '+catalog.length.toLocaleString('pt-BR')+' combinações de nome e princípio ativo. Digite para pesquisar.';search()}).catch(()=>{$('status').textContent='Não foi possível carregar medicamentos.json. Envie esse arquivo junto com index.html para a raiz do repositório.'});
-</script></body></html>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmaPreço DF | Comparador de Medicamentos</title>
+<style>
+:root {
+  --verde: #087b61;
+  --verde-escuro: #06634e;
+  --fundo: #f5f8f6;
+  --texto: #233b32;
+  --borda: #dce7e0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+header {
+  background: var(--verde);
+  color: white;
+  padding: 16px 20px;
+}
+header .conteudo {
+  max-width: 1080px;
+  margin: auto;
+}
+.logo { font-size: 23px; font-weight: bold; }
+header p { margin: 5px 0 0; font-size: 12px; }
+main {
+  max-width: 1080px;
+  margin: auto;
+  padding: 18px 14px;
+}
+h1 { font-size: 22px; margin: 4px 0 8px; }
+h2 { font-size: 16px; margin: 0 0 12px; }
+p { line-height: 1.5; }
+.painel {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 13px;
+}
+.aviso {
+  background: #fff9e9;
+  border: 1px solid #eedda9;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  margin: 13px 0;
+}
+.campo {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+}
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+}
+input, select {
+  display: block;
+  width: 100%;
+  padding: 11px;
+  margin-top: 6px;
+  border: 1px solid #cbd9d1;
+  border-radius: 7px;
+  background: white;
+  font-size: 13px;
+}
+input:focus, select:focus {
+  outline: 2px solid #b0dac8;
+}
+.info {
+  font-size: 12px;
+  color: #65776e;
+}
+.resultados {
+  max-height: 290px;
+  overflow-y: auto;
+  border: 1px solid var(--borda);
+  border-radius: 7px;
+  margin-top: 10px;
+}
+.resultado {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: 0;
+  border-bottom: 1px solid #e8eee9;
+  background: white;
+  text-align: left;
+  color: var(--texto);
+  cursor: pointer;
+}
+.resultado:hover { background: #edf7f1; }
+.resultado strong { display: block; font-size: 12px; }
+.resultado small {
+  display: block;
+  margin-top: 4px;
+  color: #64766c;
+}
+.selecionado {
+  color: var(--verde-escuro);
+  font-weight: bold;
+  font-size: 14px;
+}
+.lojas {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 10px;
+}
+.lojas button {
+  background: var(--verde);
+  color: white;
+  border: 0;
+  border-radius: 7px;
+  padding: 10px 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.lojas button:hover { background: var(--verde-escuro); }
+.tabela {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+}
+th {
+  background: #eaf3ed;
+  color: #254a39;
+  text-align: left;
+  padding: 10px 8px;
+}
+td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #e7ede9;
+}
+th:last-child, td:last-child {
+  text-align: right;
+  white-space: nowrap;
+}
+tr:hover td { background: #f8fbf9; }
+.preco { font-weight: bold; color: var(--verde); }
+footer {
+  font-size: 11px;
+  color: #66776d;
+  padding: 12px 0 20px;
+}
+@media(max-width:650px) {
+  .campo { grid-template-columns: 1fr; }
+  .lojas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lojas button { font-size: 11px; }
+  table { font-size: 11px; }
+  th, td { padding: 9px 5px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="conteudo">
+    <div class="logo">✚ FarmaPreço DF</div>
+    <p>Pesquise medicamentos e compare farmácias do Distrito Federal</p>
+  </div>
+</header>
+
+<main>
+  <h1>Encontre seu medicamento</h1>
+  <p class="info">
+    Consulte medicamentos registrados na Anvisa e pesquise nas principais
+    redes de farmácias que atendem o Distrito Federal.
+  </p>
+
+  <div class="aviso">
+    <strong>Catálogo nacional da Anvisa.</strong>
+    Os preços das farmácias ainda não estão integrados.
+    Não exibimos valores fictícios.
+  </div>
+
+  <section class="painel">
+    <h2>Pesquisar medicamento</h2>
+
+    <div class="campo">
+      <label>
+        Nome comercial ou princípio ativo
+        <input
+          type="search"
+          id="busca"
+          placeholder="Ex.: Novalgina, dipirona, Tylenol"
+          autocomplete="off"
+        >
+      </label>
+
+      <label>
+        Região de atendimento
+        <select id="regiao">
+          <option>Todo o Distrito Federal</option>
+          <option>Plano Piloto</option>
+          <option>Águas Claras</option>
+          <option>Taguatinga</option>
+          <option>Ceilândia</option>
+          <option>Guará</option>
+          <option>Samambaia</option>
+          <option>Outras regiões do DF</option>
+        </select>
+      </label>
+    </div>
+
+    <p id="status" class="info">Carregando catálogo nacional...</p>
+    <div id="resultados" class="resultados" hidden></div>
+  </section>
+
+  <section class="painel">
+    <h2>Medicamento selecionado</h2>
+    <p id="selecionado" class="selecionado">
+      Selecione um medicamento na pesquisa acima.
+    </p>
+    <p id="principio" class="info"></p>
+  </section>
+
+  <section class="painel">
+    <h2>Comparação de preços</h2>
+
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr>
+            <th>Farmácia</th>
+            <th>Medicamento</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody id="tabelaPrecos"></tbody>
+      </table>
+    </div>
+
+    <p class="info">
+      — indica preço ainda não consultado.
+      A apresentação, dosagem, estoque e preço devem ser confirmados
+      diretamente na farmácia.
+    </p>
+  </section>
+
+  <section class="painel">
+    <h2>Consultar nas farmácias</h2>
+    <p class="info">
+      Selecione um medicamento e clique na farmácia desejada.
+    </p>
+    <div id="lojas" class="lojas"></div>
+    <p id="mensagemLoja" class="info"></p>
+  </section>
+
+  <footer>
+    FarmaPreço DF — Catálogo baseado nos registros ativos do arquivo
+    DADOS_ABERTOS_MEDICAMENTOS.csv da Anvisa.
+    Consulta informativa. Não realiza vendas.
+  </footer>
+</main>
+
+<script>
+const farmacias = [
+  ["Drogasil", "https://www.drogasil.com.br/"],
+  ["Droga Raia", "https://www.drogaraia.com.br/"],
+  ["Pague Menos", "https://www.paguemenos.com.br/"],
+  ["Rosário", "https://www.drogariarosario.com.br/"],
+  ["Pacheco", "https://www.drogariaspacheco.com.br/"]
+];
+
+const el = id => document.getElementById(id);
+
+let catalogo = [];
+let medicamentoSelecionado = null;
+let temporizador;
+
+function decodificar(texto) {
+  const area = document.createElement("textarea");
+  area.innerHTML = String(texto || "");
+  return area.value;
+}
+
+function normalizar(texto) {
+  return String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function atualizarTabela() {
+  const corpo = el("tabelaPrecos");
+  corpo.replaceChildren();
+
+  farmacias.forEach(([nome]) => {
+    const linha = document.createElement("tr");
+
+    [
+      nome,
+      medicamentoSelecionado
+        ? medicamentoSelecionado[0]
+        : "Selecione um medicamento",
+      "—"
+    ].forEach((valor, indice) => {
+      const coluna = document.createElement("td");
+      coluna.textContent = valor;
+      if (indice === 2) coluna.className = "preco";
+      linha.appendChild(coluna);
+    });
+
+    corpo.appendChild(linha);
+  });
+}
+
+function selecionarMedicamento(medicamento) {
+  medicamentoSelecionado = medicamento;
+
+  el("selecionado").textContent = medicamento[0];
+
+  el("principio").textContent =
+    "Princípio ativo: " +
+    (medicamento[1] || "não informado");
+
+  el("resultados").replaceChildren();
+  el("resultados").hidden = true;
+
+  el("status").textContent =
+    "Medicamento selecionado. Consulte as farmácias abaixo.";
+
+  atualizarTabela();
+}
+
+function pesquisar() {
+  const termo = normalizar(el("busca").value);
+  const area = el("resultados");
+
+  area.replaceChildren();
+  area.hidden = true;
+
+  if (termo.length < 2) {
+    el("status").textContent =
+      "Digite pelo menos 2 caracteres para pesquisar.";
+    return;
+  }
+
+  const palavras = termo.split(/\s+/).filter(Boolean);
+  let quantidade = 0;
+
+  for (const medicamento of catalogo) {
+    const conteudo = normalizar(
+      medicamento[0] + " " + medicamento[1]
+    );
+
+    if (palavras.every(p => conteudo.includes(p))) {
+      quantidade++;
+
+      if (quantidade <= 40) {
+        const botao = document.createElement("button");
+        botao.className = "resultado";
+
+        const nome = document.createElement("strong");
+        nome.textContent = medicamento[0];
+
+        const principio = document.createElement("small");
+        principio.textContent =
+          medicamento[1] || "Princípio ativo não informado";
+
+        botao.append(nome, principio);
+
+        botao.addEventListener("click", () => {
+          selecionarMedicamento(medicamento);
+        });
+
+        area.appendChild(botao);
+      }
+    }
+  }
+
+  if (quantidade > 0) {
+    area.hidden = false;
+    el("status").textContent =
+      quantidade.toLocaleString("pt-BR") +
+      " resultados encontrados. Exibindo até 40.";
+  } else {
+    el("status").textContent =
+      "Nenhum medicamento encontrado nessa base.";
+  }
+}
+
+function criarBotoesFarmacias() {
+  const area = el("lojas");
+
+  farmacias.forEach(([nome, endereco]) => {
+    const botao = document.createElement("button");
+    botao.textContent = nome;
+
+    botao.addEventListener("click", () => {
+      if (!medicamentoSelecionado) {
+        el("mensagemLoja").textContent =
+          "Selecione primeiro um medicamento.";
+        return;
+      }
+
+      const nomeMedicamento = medicamentoSelecionado[0];
+
+      el("mensagemLoja").textContent =
+        "Abrindo " + nome +
+        ". Pesquise por: " + nomeMedicamento;
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(nomeMedicamento)
+          .catch(() => {});
+      }
+
+      window.open(endereco, "_blank", "noopener,noreferrer");
+    });
+
+    area.appendChild(botao);
+  });
+}
+
+el("busca").addEventListener("input", () => {
+  clearTimeout(temporizador);
+  temporizador = setTimeout(pesquisar, 160);
+});
+
+criarBotoesFarmacias();
+atualizarTabela();
+
+fetch("./medicamentos.json")
+  .then(resposta => {
+    if (!resposta.ok) {
+      throw new Error("Arquivo não encontrado");
+    }
+    return resposta.json();
+  })
+  .then(dados => {
+    catalogo = dados.map(item => [
+      decodificar(item[0]),
+      decodificar(item[1])
+    ]);
+
+    el("status").textContent =
+      "Catálogo carregado: " +
+      catalogo.length.toLocaleString("pt-BR") +
+      " medicamentos e combinações de princípios ativos. " +
+      "Digite para pesquisar.";
+  })
+  .catch(erro => {
+    console.error(erro);
+    el("status").textContent =
+      "Erro ao carregar medicamentos.json. " +
+      "Verifique se o arquivo está na mesma pasta do index.html.";
+  });
+</script>
+
+</body>
+</html>
