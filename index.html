@@ -4,269 +4,321 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FarmaPreço DF | Comparador de Medicamentos</title>
+<title>FarmaPreço DF</title>
 <style>
 :root {
-  --verde: #087b61;
-  --verde-escuro: #06634e;
-  --fundo: #f5f8f6;
-  --texto: #233b32;
-  --borda: #dce7e0;
+  --verde:#087b61;
+  --escuro:#075b49;
+  --fundo:#f5f8f6;
+  --borda:#dce8e1;
+  --texto:#243c32;
 }
-* { box-sizing: border-box; }
+* { box-sizing:border-box; }
 body {
-  margin: 0;
-  background: var(--fundo);
-  color: var(--texto);
-  font-family: Arial, sans-serif;
-  font-size: 13px;
+  margin:0;
+  background:var(--fundo);
+  color:var(--texto);
+  font:13px Arial,sans-serif;
 }
 header {
-  background: var(--verde);
-  color: white;
-  padding: 16px 20px;
+  background:var(--verde);
+  color:white;
+  padding:17px 16px;
 }
-header .conteudo {
-  max-width: 1080px;
-  margin: auto;
+header .centro,main {
+  max-width:1080px;
+  margin:auto;
 }
-.logo { font-size: 23px; font-weight: bold; }
-header p { margin: 5px 0 0; font-size: 12px; }
-main {
-  max-width: 1080px;
-  margin: auto;
-  padding: 18px 14px;
-}
-h1 { font-size: 22px; margin: 4px 0 8px; }
-h2 { font-size: 16px; margin: 0 0 12px; }
-p { line-height: 1.5; }
+.logo { font-size:23px;font-weight:bold; }
+header p { margin:5px 0 0;font-size:12px; }
+main { padding:18px 14px; }
+h1 { font-size:22px;margin:0 0 8px; }
+h2 { font-size:16px;margin:0 0 12px; }
+p { line-height:1.5; }
 .painel {
-  background: white;
-  border: 1px solid var(--borda);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 13px;
+  background:white;
+  border:1px solid var(--borda);
+  border-radius:11px;
+  padding:15px;
+  margin:12px 0;
 }
 .aviso {
-  background: #fff9e9;
-  border: 1px solid #eedda9;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  margin: 13px 0;
+  background:#fff9e7;
+  border:1px solid #eadba8;
+  padding:11px;
+  border-radius:8px;
+  font-size:12px;
 }
-.campo {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 12px;
+.grade {
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:11px;
+}
+.filtros {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:11px;
+  margin-top:12px;
 }
 label {
-  display: block;
-  font-size: 12px;
-  font-weight: bold;
+  font-size:12px;
+  font-weight:bold;
 }
-input, select {
-  display: block;
-  width: 100%;
-  padding: 11px;
-  margin-top: 6px;
-  border: 1px solid #cbd9d1;
-  border-radius: 7px;
-  background: white;
-  font-size: 13px;
+input,select {
+  display:block;
+  width:100%;
+  margin-top:6px;
+  padding:10px;
+  border:1px solid #cbdcd3;
+  border-radius:7px;
+  background:white;
+  color:var(--texto);
+  font:13px Arial,sans-serif;
 }
-input:focus, select:focus {
-  outline: 2px solid #b0dac8;
+button {
+  background:var(--verde);
+  color:white;
+  border:0;
+  border-radius:7px;
+  padding:10px 12px;
+  cursor:pointer;
+  font:12px Arial,sans-serif;
 }
-.info {
-  font-size: 12px;
-  color: #65776e;
+button:hover { background:var(--escuro); }
+button:disabled {
+  opacity:.6;
+  cursor:not-allowed;
+}
+.info { color:#64776c;font-size:12px; }
+.status {
+  background:#eef7f1;
+  border-radius:7px;
+  padding:10px;
+  margin-top:12px;
 }
 .resultados {
-  max-height: 290px;
-  overflow-y: auto;
-  border: 1px solid var(--borda);
-  border-radius: 7px;
-  margin-top: 10px;
+  max-height:290px;
+  overflow-y:auto;
+  border:1px solid var(--borda);
+  border-radius:7px;
+  margin-top:10px;
 }
 .resultado {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  border: 0;
-  border-bottom: 1px solid #e8eee9;
-  background: white;
-  text-align: left;
-  color: var(--texto);
-  cursor: pointer;
+  width:100%;
+  background:white;
+  color:var(--texto);
+  text-align:left;
+  border-radius:0;
+  border-bottom:1px solid #e8eee9;
+  padding:10px;
 }
-.resultado:hover { background: #edf7f1; }
-.resultado strong { display: block; font-size: 12px; }
+.resultado:hover { background:#edf7f2; }
+.resultado strong { display:block; }
 .resultado small {
-  display: block;
-  margin-top: 4px;
-  color: #64766c;
+  display:block;
+  color:#66786e;
+  margin-top:4px;
 }
 .selecionado {
-  color: var(--verde-escuro);
-  font-weight: bold;
-  font-size: 14px;
+  color:var(--escuro);
+  font-weight:bold;
+  font-size:14px;
 }
-.lojas {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 7px;
-  margin-top: 10px;
-}
-.lojas button {
-  background: var(--verde);
-  color: white;
-  border: 0;
-  border-radius: 7px;
-  padding: 10px 4px;
-  font-size: 12px;
-  cursor: pointer;
-}
-.lojas button:hover { background: var(--verde-escuro); }
-.tabela {
-  overflow-x: auto;
-  margin-top: 10px;
-}
+.tabela { overflow-x:auto; }
 table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 12px;
+  border-collapse:collapse;
+  width:100%;
+  font-size:12px;
 }
 th {
-  background: #eaf3ed;
-  color: #254a39;
-  text-align: left;
-  padding: 10px 8px;
+  background:#eaf3ed;
+  text-align:left;
+  padding:10px 8px;
 }
 td {
-  padding: 10px 8px;
-  border-bottom: 1px solid #e7ede9;
+  padding:10px 8px;
+  border-bottom:1px solid #e5ede8;
 }
-th:last-child, td:last-child {
-  text-align: right;
-  white-space: nowrap;
+th:last-child,td:last-child {
+  text-align:right;
 }
-tr:hover td { background: #f8fbf9; }
-.preco { font-weight: bold; color: var(--verde); }
+.lojas {
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:7px;
+}
+.lojas button { padding:10px 4px; }
+.acoes {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.acoes h2 { margin:0; }
+.secundario { background:#e6f2eb;color:var(--escuro); }
+.secundario:hover { background:#d5e9dd; }
 footer {
-  font-size: 11px;
-  color: #66776d;
-  padding: 12px 0 20px;
+  color:#66776d;
+  font-size:11px;
+  padding:15px 0;
 }
 @media(max-width:650px) {
-  .campo { grid-template-columns: 1fr; }
-  .lojas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .lojas button { font-size: 11px; }
-  table { font-size: 11px; }
-  th, td { padding: 9px 5px; }
+  .grade,.filtros { grid-template-columns:1fr; }
+  .lojas { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .lojas button { font-size:11px; }
+  table { font-size:11px; }
+  th,td { padding:9px 5px; }
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="conteudo">
+  <div class="centro">
     <div class="logo">✚ FarmaPreço DF</div>
-    <p>Pesquise medicamentos e compare farmácias do Distrito Federal</p>
+    <p>Medicamentos, farmácias e comparação de preços</p>
   </div>
 </header>
 
 <main>
-  <h1>Encontre seu medicamento</h1>
-  <p class="info">
-    Consulte medicamentos registrados na Anvisa e pesquise nas principais
-    redes de farmácias que atendem o Distrito Federal.
-  </p>
+<h1>Encontre seu medicamento</h1>
+<p class="info">
+  Consulte o catálogo nacional da Anvisa e configure
+  a região onde deseja procurar ofertas.
+</p>
 
-  <div class="aviso">
-    <strong>Catálogo nacional da Anvisa.</strong>
-    Os preços das farmácias ainda não estão integrados.
-    Não exibimos valores fictícios.
+<div class="aviso">
+  <strong>Catálogo nacional conectado.</strong>
+  A consulta automática de preços, estoques e distâncias
+  ainda depende da integração com as farmácias.
+  Nenhum preço fictício será apresentado.
+</div>
+
+<section class="painel">
+  <h2>Pesquisar medicamento</h2>
+
+  <div class="grade">
+    <label>
+      Nome comercial ou princípio ativo
+      <input id="busca" type="search"
+        placeholder="Ex.: Novalgina, dipirona, Tylenol"
+        autocomplete="off">
+    </label>
+
+    <label>
+      CEP de referência
+      <input id="cep" type="text"
+        inputmode="numeric"
+        maxlength="9"
+        placeholder="00000-000">
+    </label>
   </div>
 
-  <section class="painel">
-    <h2>Pesquisar medicamento</h2>
+  <div class="filtros">
+    <label>
+      Raio de pesquisa
+      <select id="raio">
+        <option value="5">Até 5 km</option>
+        <option value="10">Até 10 km</option>
+        <option value="20">Até 20 km</option>
+        <option value="30" selected>Até 30 km</option>
+        <option value="50">Até 50 km</option>
+        <option value="75">Até 75 km</option>
+        <option value="100">Até 100 km</option>
+        <option value="150">Até 150 km</option>
+        <option value="df">Todo o Distrito Federal</option>
+      </select>
+    </label>
 
-    <div class="campo">
-      <label>
-        Nome comercial ou princípio ativo
-        <input
-          type="search"
-          id="busca"
-          placeholder="Ex.: Novalgina, dipirona, Tylenol"
-          autocomplete="off"
-        >
-      </label>
+    <label>
+      Modalidade
+      <select id="modalidade">
+        <option value="ambos">Entrega ou retirada</option>
+        <option value="retirada">Retirada na loja</option>
+        <option value="entrega">Entrega no endereço</option>
+      </select>
+    </label>
 
-      <label>
-        Região de atendimento
-        <select id="regiao">
-          <option>Todo o Distrito Federal</option>
-          <option>Plano Piloto</option>
-          <option>Águas Claras</option>
-          <option>Taguatinga</option>
-          <option>Ceilândia</option>
-          <option>Guará</option>
-          <option>Samambaia</option>
-          <option>Outras regiões do DF</option>
-        </select>
-      </label>
-    </div>
+    <label>
+      Ordenar resultados
+      <select id="ordem">
+        <option value="preco">Menor preço</option>
+        <option value="distancia">Menor distância</option>
+        <option value="total">Menor custo total</option>
+      </select>
+    </label>
+  </div>
 
-    <p id="status" class="info">Carregando catálogo nacional...</p>
-    <div id="resultados" class="resultados" hidden></div>
-  </section>
+  <p class="info">
+    O raio será medido em linha reta a partir do CEP.
+    Para retirada, poderá incluir cidades do Entorno de Goiás.
+    A distância por estrada poderá ser maior.
+  </p>
 
-  <section class="painel">
-    <h2>Medicamento selecionado</h2>
-    <p id="selecionado" class="selecionado">
-      Selecione um medicamento na pesquisa acima.
-    </p>
-    <p id="principio" class="info"></p>
-  </section>
+  <p id="statusCatalogo" class="info">
+    Carregando catálogo nacional...
+  </p>
 
-  <section class="painel">
+  <div id="resultados" class="resultados" hidden></div>
+</section>
+
+<section class="painel">
+  <h2>Medicamento selecionado</h2>
+  <p id="selecionado" class="selecionado">
+    Selecione um medicamento na pesquisa.
+  </p>
+  <p id="principio" class="info"></p>
+  <p class="info">
+    Confira dosagem, forma farmacêutica e quantidade
+    da embalagem antes de comparar ofertas.
+  </p>
+</section>
+
+<section class="painel">
+  <div class="acoes">
     <h2>Comparação de preços</h2>
+    <button id="atualizar">↻ Atualizar consultas</button>
+  </div>
 
-    <div class="tabela">
-      <table>
-        <thead>
-          <tr>
-            <th>Farmácia</th>
-            <th>Medicamento</th>
-            <th>Valor</th>
-          </tr>
-        </thead>
-        <tbody id="tabelaPrecos"></tbody>
-      </table>
-    </div>
+  <div class="tabela">
+    <table>
+      <thead>
+        <tr>
+          <th>Farmácia</th>
+          <th>Medicamento</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaPrecos"></tbody>
+    </table>
+  </div>
 
-    <p class="info">
-      — indica preço ainda não consultado.
-      A apresentação, dosagem, estoque e preço devem ser confirmados
-      diretamente na farmácia.
-    </p>
-  </section>
+  <p id="situacaoConsulta" class="status info">
+    Aguardando seleção do medicamento.
+  </p>
 
-  <section class="painel">
-    <h2>Consultar nas farmácias</h2>
-    <p class="info">
-      Selecione um medicamento e clique na farmácia desejada.
-    </p>
-    <div id="lojas" class="lojas"></div>
-    <p id="mensagemLoja" class="info"></p>
-  </section>
+  <p class="info">
+    Preços e distâncias só serão preenchidos quando
+    retornarem de fontes verificáveis. O horário da
+    consulta será informado quando essa integração existir.
+  </p>
+</section>
 
-  <footer>
-    FarmaPreço DF — Catálogo baseado nos registros ativos do arquivo
-    DADOS_ABERTOS_MEDICAMENTOS.csv da Anvisa.
-    Consulta informativa. Não realiza vendas.
-  </footer>
+<section class="painel">
+  <h2>Consultar nas farmácias</h2>
+  <div id="lojas" class="lojas"></div>
+  <p id="mensagemLoja" class="info">
+    Selecione um medicamento antes de abrir uma farmácia.
+  </p>
+</section>
+
+<footer>
+  FarmaPreço DF — Base de medicamentos fornecida a partir
+  dos dados abertos da Anvisa. Consulta informativa.
+  O site não realiza vendas.
+</footer>
 </main>
 
 <script>
@@ -281,40 +333,73 @@ const farmacias = [
 const el = id => document.getElementById(id);
 
 let catalogo = [];
-let medicamentoSelecionado = null;
+let selecionado = null;
 let temporizador;
 
-function decodificar(texto) {
+function decodificar(valor) {
   const area = document.createElement("textarea");
-  area.innerHTML = String(texto || "");
+  area.innerHTML = String(valor || "");
   return area.value;
 }
 
-function normalizar(texto) {
-  return String(texto || "")
+function normalizar(valor) {
+  return String(valor || "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
 }
 
-function atualizarTabela() {
+function formatarCEP(valor) {
+  const numeros = valor.replace(/\D/g, "").slice(0,8);
+  if (numeros.length > 5) {
+    return numeros.slice(0,5) + "-" + numeros.slice(5);
+  }
+  return numeros;
+}
+
+function salvarPreferencias() {
+  const dados = {
+    cep: el("cep").value,
+    raio: el("raio").value,
+    modalidade: el("modalidade").value,
+    ordem: el("ordem").value
+  };
+  localStorage.setItem("farmapreco_filtros", JSON.stringify(dados));
+}
+
+function carregarPreferencias() {
+  try {
+    const dados = JSON.parse(
+      localStorage.getItem("farmapreco_filtros") || "{}"
+    );
+    if (dados.cep) el("cep").value = formatarCEP(dados.cep);
+    ["raio","modalidade","ordem"].forEach(id => {
+      if (dados[id] &&
+          [...el(id).options].some(o => o.value === dados[id])) {
+        el(id).value = dados[id];
+      }
+    });
+  } catch (erro) {
+    console.warn("Preferências não recuperadas", erro);
+  }
+}
+
+function preencherTabela() {
   const corpo = el("tabelaPrecos");
   corpo.replaceChildren();
 
   farmacias.forEach(([nome]) => {
     const linha = document.createElement("tr");
-
-    [
+    const valores = [
       nome,
-      medicamentoSelecionado
-        ? medicamentoSelecionado[0]
-        : "Selecione um medicamento",
+      selecionado ? selecionado[0] : "Selecione um medicamento",
       "—"
-    ].forEach((valor, indice) => {
+    ];
+
+    valores.forEach(valor => {
       const coluna = document.createElement("td");
       coluna.textContent = valor;
-      if (indice === 2) coluna.className = "preco";
       linha.appendChild(coluna);
     });
 
@@ -322,22 +407,24 @@ function atualizarTabela() {
   });
 }
 
-function selecionarMedicamento(medicamento) {
-  medicamentoSelecionado = medicamento;
+function selecionarMedicamento(item) {
+  selecionado = item;
 
-  el("selecionado").textContent = medicamento[0];
-
+  el("selecionado").textContent = item[0];
   el("principio").textContent =
-    "Princípio ativo: " +
-    (medicamento[1] || "não informado");
+    "Princípio ativo: " + (item[1] || "não informado");
 
   el("resultados").replaceChildren();
   el("resultados").hidden = true;
 
-  el("status").textContent =
-    "Medicamento selecionado. Consulte as farmácias abaixo.";
+  el("statusCatalogo").textContent =
+    "Medicamento selecionado.";
 
-  atualizarTabela();
+  el("mensagemLoja").textContent =
+    "Clique em uma farmácia para abrir o site e conferir a apresentação.";
+
+  preencherTabela();
+  atualizarSituacao();
 }
 
 function pesquisar() {
@@ -348,18 +435,16 @@ function pesquisar() {
   area.hidden = true;
 
   if (termo.length < 2) {
-    el("status").textContent =
-      "Digite pelo menos 2 caracteres para pesquisar.";
+    el("statusCatalogo").textContent =
+      "Digite pelo menos 2 caracteres.";
     return;
   }
 
   const palavras = termo.split(/\s+/).filter(Boolean);
   let quantidade = 0;
 
-  for (const medicamento of catalogo) {
-    const conteudo = normalizar(
-      medicamento[0] + " " + medicamento[1]
-    );
+  for (const item of catalogo) {
+    const conteudo = normalizar(item[0] + " " + item[1]);
 
     if (palavras.every(p => conteudo.includes(p))) {
       quantidade++;
@@ -369,61 +454,88 @@ function pesquisar() {
         botao.className = "resultado";
 
         const nome = document.createElement("strong");
-        nome.textContent = medicamento[0];
+        nome.textContent = item[0];
 
         const principio = document.createElement("small");
         principio.textContent =
-          medicamento[1] || "Princípio ativo não informado";
+          item[1] || "Princípio ativo não informado";
 
         botao.append(nome, principio);
-
-        botao.addEventListener("click", () => {
-          selecionarMedicamento(medicamento);
-        });
+        botao.onclick = () => selecionarMedicamento(item);
 
         area.appendChild(botao);
       }
     }
   }
 
-  if (quantidade > 0) {
+  if (quantidade) {
     area.hidden = false;
-    el("status").textContent =
+    el("statusCatalogo").textContent =
       quantidade.toLocaleString("pt-BR") +
-      " resultados encontrados. Exibindo até 40.";
+      " resultados. Exibindo até 40.";
   } else {
-    el("status").textContent =
-      "Nenhum medicamento encontrado nessa base.";
+    el("statusCatalogo").textContent =
+      "Nenhum registro encontrado.";
   }
 }
 
-function criarBotoesFarmacias() {
+function atualizarSituacao() {
+  if (!selecionado) {
+    el("situacaoConsulta").textContent =
+      "Selecione um medicamento para iniciar.";
+    return;
+  }
+
+  const cep = el("cep").value.replace(/\D/g,"");
+
+  if (cep.length !== 8) {
+    el("situacaoConsulta").textContent =
+      "Informe um CEP válido de 8 dígitos para configurar a busca.";
+    return;
+  }
+
+  const raio = el("raio").value;
+  const distancia = raio === "df"
+    ? "todo o Distrito Federal"
+    : "até " + raio + " km";
+
+  const modalidade = el("modalidade")
+    .selectedOptions[0].textContent;
+
+  el("situacaoConsulta").textContent =
+    "Pesquisa configurada para " + distancia +
+    ", modalidade: " + modalidade +
+    ". A consulta automática de preços e distâncias " +
+    "ainda não está conectada. Nenhum preço foi atualizado.";
+}
+
+function criarBotoes() {
   const area = el("lojas");
 
-  farmacias.forEach(([nome, endereco]) => {
+  farmacias.forEach(([nome,url]) => {
     const botao = document.createElement("button");
     botao.textContent = nome;
 
-    botao.addEventListener("click", () => {
-      if (!medicamentoSelecionado) {
+    botao.onclick = () => {
+      if (!selecionado) {
         el("mensagemLoja").textContent =
           "Selecione primeiro um medicamento.";
         return;
       }
 
-      const nomeMedicamento = medicamentoSelecionado[0];
+      const medicamento = selecionado[0];
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(medicamento).catch(() => {});
+      }
 
       el("mensagemLoja").textContent =
         "Abrindo " + nome +
-        ". Pesquise por: " + nomeMedicamento;
+        ". Procure por " + medicamento +
+        " e confira a apresentação e o preço.";
 
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(nomeMedicamento)
-          .catch(() => {});
-      }
-
-      window.open(endereco, "_blank", "noopener,noreferrer");
-    });
+      window.open(url, "_blank", "noopener,noreferrer");
+    };
 
     area.appendChild(botao);
   });
@@ -431,17 +543,34 @@ function criarBotoesFarmacias() {
 
 el("busca").addEventListener("input", () => {
   clearTimeout(temporizador);
-  temporizador = setTimeout(pesquisar, 160);
+  temporizador = setTimeout(pesquisar,160);
 });
 
-criarBotoesFarmacias();
-atualizarTabela();
+el("cep").addEventListener("input", () => {
+  el("cep").value = formatarCEP(el("cep").value);
+  salvarPreferencias();
+  atualizarSituacao();
+});
+
+["raio","modalidade","ordem"].forEach(id => {
+  el(id).addEventListener("change", () => {
+    salvarPreferencias();
+    atualizarSituacao();
+  });
+});
+
+el("atualizar").addEventListener("click", () => {
+  preencherTabela();
+  atualizarSituacao();
+});
+
+carregarPreferencias();
+criarBotoes();
+preencherTabela();
 
 fetch("./medicamentos.json")
   .then(resposta => {
-    if (!resposta.ok) {
-      throw new Error("Arquivo não encontrado");
-    }
+    if (!resposta.ok) throw new Error("Arquivo não encontrado");
     return resposta.json();
   })
   .then(dados => {
@@ -450,19 +579,18 @@ fetch("./medicamentos.json")
       decodificar(item[1])
     ]);
 
-    el("status").textContent =
+    el("statusCatalogo").textContent =
       "Catálogo carregado: " +
       catalogo.length.toLocaleString("pt-BR") +
-      " medicamentos e combinações de princípios ativos. " +
-      "Digite para pesquisar.";
+      " combinações de medicamentos e princípios ativos.";
+
+    if (el("busca").value.trim()) pesquisar();
   })
   .catch(erro => {
     console.error(erro);
-    el("status").textContent =
-      "Erro ao carregar medicamentos.json. " +
-      "Verifique se o arquivo está na mesma pasta do index.html.";
+    el("statusCatalogo").textContent =
+      "Não foi possível carregar medicamentos.json.";
   });
 </script>
-
 </body>
 </html>
